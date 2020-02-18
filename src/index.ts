@@ -1,7 +1,17 @@
-import haltestellen from "./ogd-data/haltestellen.json";
-import steige from "./ogd-data/steige.json";
-import linien from "./ogd-data/linien.json";
-import { BuildScaffold } from "./classes/BuildScaffold";
+import f from "./ogd-data/linien.json";
+import d from "./ogd-data/steig-daten-mock.json";
+import {
+  WienerLinienFetchScaffold,
+  IStationObject,
+  ITrackObject,
+  ILineObject
+} from "./classes/WienerLinienFetchScaffold";
+import g from "./ogd-data/haltestellen.json";
 
-console.log(steige);
-console.log(linien);
+const wl = new WienerLinienFetchScaffold(
+  g as IStationObject[],
+  d as ITrackObject[],
+  f as ILineObject[]
+);
+
+console.log(wl.getDataByStationName("vanswietenkaserne"));
