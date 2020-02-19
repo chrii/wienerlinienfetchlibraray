@@ -1,6 +1,6 @@
 import f from "./ogd-data/linien.json";
 import d from "./ogd-data/steig-daten-mock.json";
-import { WienerLinienFetchScaffold } from "./classes/WienerLinienFetchScaffold";
+import { FetchFromJson } from "./classes/FetchFromJson";
 import g from "./ogd-data/haltestellen.json";
 import {
   IStationObject,
@@ -8,15 +8,15 @@ import {
   ILineObject
 } from "./classes/Interfaces";
 
-const wl = new WienerLinienFetchScaffold(
+const wl = new FetchFromJson(
   g as IStationObject[],
   d as ITrackObject[],
   f as ILineObject[]
 );
 
 try {
-  console.log(wl.getDataByStationName("kaiserebersdorf"));
-  console.log(wl.getRbl(wl.getDataByStationName("Simmering")));
+  //console.log(wl.getDataByStationName("altes landgut"));
+  console.log(wl.getRbl(wl.getDataByStationName("westbahnhof")));
 } catch (e) {
   console.log(e);
 }

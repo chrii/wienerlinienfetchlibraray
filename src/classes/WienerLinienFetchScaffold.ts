@@ -5,36 +5,19 @@ import {
   IMasterDataObject
 } from "./Interfaces";
 
-export class WienerLinienFetchScaffold {
-  protected masterData: IMasterDataObject[] = [];
+export abstract class WienerLinienFetchScaffold {
+  protected abstract masterData: IMasterDataObject[] = [];
+  protected abstract haltestellen: IStationObject[] = [];
+  protected abstract steige: ITrackObject[] = [];
+  protected abstract linien: ILineObject[] = [];
+  abstract createScaffold(): IMasterDataObject[];
 
-  constructor(
-    protected haltestellen: IStationObject[],
-    protected steige: ITrackObject[],
-    protected linien: ILineObject[]
-  ) {
-    this.masterData = this.createScaffold();
+  constructor() {
+    //this.masterData = this.createScaffold();
   }
 
   get getAllData(): IMasterDataObject[] {
     return this.masterData;
-  }
-
-  private createScaffold(): IMasterDataObject[] {
-    const scaffold = this.steige.map(
-      (item: ITrackObject): IMasterDataObject[] => {
-        const lineItem = this.linien.find(
-          (i: ILineObject) => item.FK_LINIEN_ID === i.LINIEN_ID
-        );
-        const stationItem = this.haltestellen.find(
-          (i: IStationObject) => item.FK_HALTESTELLEN_ID === i.HALTESTELLEN_ID
-        );
-        //@ts-ignore
-        return { ...item, ...lineItem, ...stationItem } as IMasterDataObject;
-      }
-    );
-    //@ts-ignore
-    return scaffold;
   }
 
   protected sanitizeString = (str: string): string =>
