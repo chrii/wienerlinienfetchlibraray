@@ -1,12 +1,12 @@
 import f from "./ogd-data/linien.json";
 import d from "./ogd-data/steig-daten-mock.json";
+import { WienerLinienFetchScaffold } from "./classes/WienerLinienFetchScaffold";
+import g from "./ogd-data/haltestellen.json";
 import {
-  WienerLinienFetchScaffold,
   IStationObject,
   ITrackObject,
   ILineObject
-} from "./classes/WienerLinienFetchScaffold";
-import g from "./ogd-data/haltestellen.json";
+} from "./classes/Interfaces";
 
 const wl = new WienerLinienFetchScaffold(
   g as IStationObject[],
@@ -14,4 +14,9 @@ const wl = new WienerLinienFetchScaffold(
   f as ILineObject[]
 );
 
-console.log(wl.getDataByStationName("vanswietenkaserne"));
+try {
+  console.log(wl.getDataByStationName("kaiserebersdorf"));
+  console.log(wl.getRbl(wl.getDataByStationName("Simmering")));
+} catch (e) {
+  console.log(e);
+}

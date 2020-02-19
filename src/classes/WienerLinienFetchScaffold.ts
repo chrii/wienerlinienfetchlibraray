@@ -1,66 +1,12 @@
-export interface IStationObject {
-  HALTESTELLEN_ID: number;
-  TYP: string;
-  DIVA: number;
-  NAME: string;
-  GEMEINDE: string;
-  GEMEINDE_ID: number;
-  WGS84_LAT: number;
-  WGS84_LON: number;
-  STAND: string;
-}
-
-export interface ITrackObject {
-  STEIG_ID: number;
-  FK_LINIEN_ID: number;
-  FK_HALTESTELLEN_ID: number;
-  RICHTUNG: string;
-  REIHENFOLGE: number;
-  RBL_NUMMER: number;
-  BEREICH: number;
-  STEIG: string;
-  STEIG_WGS84_LAT: number;
-  STEIG_WGS84_LON: number;
-  STAND: string;
-}
-
-export interface ILineObject {
-  LINIEN_ID: number;
-  BEZEICHNUNG: number;
-  REIHENFOLGE: number;
-  ECHTZEIT: number;
-  VERKEHRSMITTEL: string;
-  STAND: string;
-}
-
-export interface IMasterDataObject {
-  STEIG_ID: number;
-  FK_LINIEN_ID: number;
-  FK_HALTESTELLEN_ID: number;
-  RICHTUNG: string;
-  REIHENFOLGE: number;
-  RBL_NUMMER: number;
-  BEREICH: number;
-  STEIG: string;
-  STEIG_WGS84_LAT: number;
-  STEIG_WGS84_LON: number;
-  HALTESTELLEN_ID: number;
-  TYP: string;
-  DIVA: number;
-  NAME: string;
-  GEMEINDE: string;
-  GEMEINDE_ID: number;
-  WGS84_LAT: number;
-  WGS84_LON: number;
-  STAND: string;
-  LINIEN_ID: number;
-  BEZEICHNUNG: number;
-  ECHTZEIT: number;
-  VERKEHRSMITTEL: string;
-}
+import {
+  IStationObject,
+  ITrackObject,
+  ILineObject,
+  IMasterDataObject
+} from "./Interfaces";
 
 export class WienerLinienFetchScaffold {
-  masterData: IMasterDataObject[] = [];
+  protected masterData: IMasterDataObject[] = [];
 
   constructor(
     protected haltestellen: IStationObject[],
@@ -70,17 +16,8 @@ export class WienerLinienFetchScaffold {
     this.masterData = this.createScaffold();
   }
 
-  protected sanitizeString = (str: string): string =>
-    str.replace(/\s|\,|\-/g, "").toLowerCase();
-
-  getDataByStationName(stationName: string): IMasterDataObject[] {
-    const formattedStationName = this.sanitizeString(stationName);
-    const filterStations = this.masterData.filter(
-      (item: IMasterDataObject): any => {
-        return this.sanitizeString(item.NAME) === formattedStationName;
-      }
-    );
-    return filterStations;
+  get getAllData(): IMasterDataObject[] {
+    return this.masterData;
   }
 
   private createScaffold(): IMasterDataObject[] {
@@ -98,5 +35,52 @@ export class WienerLinienFetchScaffold {
     );
     //@ts-ignore
     return scaffold;
+  }
+
+  protected sanitizeString = (str: string): string =>
+    str.replace(/\s|\,|\-|\.|\//g, "").toLowerCase();
+
+  getDataByStationName(stationName: string): IMasterDataObject[] {
+    const formattedStationName = this.sanitizeString(stationName);
+    const filterStations = this.masterData.filter(
+      (item: IMasterDataObject): any => {
+        return this.sanitizeString(item.NAME) === formattedStationName;
+      }
+    );
+    if (filterStations.length === 0) {
+      throw new Error("Nothing found");
+    }
+    return filterStations;
+  }
+
+  removeWienSurroundings(): void {
+    this.masterData.filter((item: IMasterDataObject) => {
+      return item.GEMEINDE === "Wien";
+    });
+  }
+
+  getMetroData(line: string, direction: string): IMasterDataObject[] {
+    const newMasterData = this.masterData.filter((item: IMasterDataObject) => {
+      const unclampDirection = item.STEIG.toString().split("-");
+      //console.log(unclampDirection[0] === "U6");
+      if (direction !== "both") {
+        return (
+          unclampDirection[1] === direction && unclampDirection[0] === line
+        );
+      } else {
+        return unclampDirection[0] === line;
+      }
+    });
+    if (newMasterData.length === 0) {
+      throw new Error("There are no entries found");
+    } else {
+      return newMasterData;
+    }
+  }
+  getRbl(input: IMasterDataObject[]): number[] {
+    const filtered = input.map(
+      (item: IMasterDataObject): number => item.RBL_NUMMER || 0
+    );
+    return filtered;
   }
 }
