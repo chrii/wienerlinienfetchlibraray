@@ -1,3 +1,6 @@
+import { Eventing } from "./Eventing";
+import axios, { AxiosPromise, AxiosResponse } from "axios";
+
 import {
   IStationObject,
   ITrackObject,
@@ -6,18 +9,22 @@ import {
 } from "./Interfaces";
 
 export abstract class WienerLinienFetchScaffold {
+  public events: Eventing = new Eventing();
+  private wlApiUrl: string = "https://www.wienerlinien.at/ogd_realtime/";
+  private rblData = {};
   protected abstract masterData: IMasterDataObject[] = [];
   protected abstract haltestellen: IStationObject[] = [];
   protected abstract steige: ITrackObject[] = [];
   protected abstract linien: ILineObject[] = [];
+  //This method must be executed in the constructor
   abstract createScaffold(): IMasterDataObject[];
-
-  constructor() {
-    //this.masterData = this.createScaffold();
-  }
 
   get getAllData(): IMasterDataObject[] {
     return this.masterData;
+  }
+
+  get realTimeData() {
+    return this.rblData;
   }
 
   protected sanitizeString = (str: string): string =>
@@ -66,4 +73,25 @@ export abstract class WienerLinienFetchScaffold {
     );
     return filtered;
   }
+  get trigger() {
+    return this.events.trigger;
+  }
+  get on() {
+    return this.events.on;
+  }
+
+  getRealTimeDataByRbl = (rblData: number[]) => {
+    let url = this.wlApiUrl + "/monitor?rbl=";
+    rblData.forEach((item: number, index: number): void => {
+      rblData.length !== index + 1
+        ? (url += `${item.toString()},`)
+        : (url += `${item.toString()}`);
+    });
+    return axios.get(url).then(response => {
+      if (response.status === 200) {
+        Object.assign(this.rblData, response.data.data.monitors);
+        this.trigger("change");
+      }
+    });
+  };
 }

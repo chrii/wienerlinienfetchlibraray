@@ -16,7 +16,12 @@ const wl = new FetchFromJson(
 
 try {
   //console.log(wl.getDataByStationName("altes landgut"));
-  console.log(wl.getRbl(wl.getDataByStationName("westbahnhof")));
+  const RBL = wl.getRbl(wl.getDataByStationName("westbahnhof"));
+
+  wl.on("change", () => {
+    console.log(wl.realTimeData);
+  });
+  wl.getRealTimeDataByRbl(RBL);
 } catch (e) {
   console.log(e);
 }
