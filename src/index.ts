@@ -18,10 +18,12 @@ try {
   //console.log(wl.getDataByStationName("altes landgut"));
   const RBL = wl.getRbl(wl.getDataByStationName("westbahnhof"));
 
+  wl.getLiveInfo();
+
   wl.on("change", () => {
-    console.log(wl.realTimeData);
+    console.log(wl.infoChannel);
   });
-  wl.getRealTimeDataByRbl(RBL);
+  //wl.getRealTimeDataByRbl(RBL);
 } catch (e) {
   console.log(e);
 }

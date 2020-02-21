@@ -9,9 +9,11 @@ import {
 } from "./Interfaces";
 
 export abstract class WienerLinienFetchScaffold {
-  public events: Eventing = new Eventing();
-  private wlApiUrl: string = "https://www.wienerlinien.at/ogd_realtime/";
   private rblData = {};
+  private getInfoChannel = {};
+
+  public events: Eventing = new Eventing();
+  private wlApiUrl: string = "https://www.wienerlinien.at/ogd_realtime";
   protected abstract masterData: IMasterDataObject[] = [];
   protected abstract haltestellen: IStationObject[] = [];
   protected abstract steige: ITrackObject[] = [];
@@ -25,6 +27,9 @@ export abstract class WienerLinienFetchScaffold {
 
   get realTimeData() {
     return this.rblData;
+  }
+  get infoChannel() {
+    return this.getInfoChannel;
   }
 
   protected sanitizeString = (str: string): string =>
@@ -67,19 +72,21 @@ export abstract class WienerLinienFetchScaffold {
       return newMasterData;
     }
   }
+
   getRbl(input: IMasterDataObject[]): number[] {
     const filtered = input.map(
       (item: IMasterDataObject): number => item.RBL_NUMMER || 0
     );
     return filtered;
   }
+
   get trigger() {
     return this.events.trigger;
   }
+
   get on() {
     return this.events.on;
   }
-
   getRealTimeDataByRbl = (rblData: number[]) => {
     let url = this.wlApiUrl + "/monitor?rbl=";
     rblData.forEach((item: number, index: number): void => {
@@ -93,5 +100,13 @@ export abstract class WienerLinienFetchScaffold {
         this.trigger("change");
       }
     });
+  };
+  getLiveInfo = async () => {
+    const url = this.wlApiUrl + "/newsList";
+    const response = await axios.get(url);
+    if (response.status === 200) {
+      this.getInfoChannel = response.data.data;
+      this.trigger("change");
+    }
   };
 }
