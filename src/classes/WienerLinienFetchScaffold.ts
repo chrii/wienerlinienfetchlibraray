@@ -87,26 +87,31 @@ export abstract class WienerLinienFetchScaffold {
   get on() {
     return this.events.on;
   }
-  getRealTimeDataByRbl = (rblData: number[]) => {
+
+  getRealTimeDataByRbl = async (rblData: number[]) => {
     let url = this.wlApiUrl + "/monitor?rbl=";
     rblData.forEach((item: number, index: number): void => {
       rblData.length !== index + 1
         ? (url += `${item.toString()},`)
         : (url += `${item.toString()}`);
     });
-    return axios.get(url).then(response => {
-      if (response.status === 200) {
-        Object.assign(this.rblData, response.data.data.monitors);
-        this.trigger("change");
-      }
-    });
+    const response: AxiosResponse = await axios.get(url);
+    if (response.status === 200) {
+      Object.assign(this.rblData, response.data.data.monitors);
+      this.trigger("change");
+    } else {
+      throw new Error("Something went wrong with the response call");
+    }
   };
+
   getLiveInfo = async () => {
     const url = this.wlApiUrl + "/newsList";
-    const response = await axios.get(url);
+    const response: AxiosResponse = await axios.get(url);
     if (response.status === 200) {
       this.getInfoChannel = response.data.data;
       this.trigger("change");
+    } else {
+      throw new Error("Something went wrong with the response call");
     }
   };
 }

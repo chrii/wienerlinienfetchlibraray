@@ -15,15 +15,12 @@ const wl = new FetchFromJson(
 );
 
 try {
-  //console.log(wl.getDataByStationName("altes landgut"));
-  const RBL = wl.getRbl(wl.getDataByStationName("westbahnhof"));
+  const RBL = wl.getRbl(wl.getDataByStationName("alser straße"));
 
-  wl.getLiveInfo();
-
+  wl.getRealTimeDataByRbl(RBL);
   wl.on("change", () => {
-    console.log(wl.infoChannel);
+    console.log(wl.realTimeData);
   });
-  //wl.getRealTimeDataByRbl(RBL);
 } catch (e) {
   console.log(e);
 }
