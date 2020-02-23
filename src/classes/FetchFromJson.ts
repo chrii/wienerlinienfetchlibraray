@@ -29,6 +29,7 @@ export class FetchFromJson extends WienerLinienFetchScaffold {
         const stationItem = this.haltestellen.find(
           (i: IStationObject) => item.FK_HALTESTELLEN_ID === i.HALTESTELLEN_ID
         );
+        // @todo
         //@ts-ignore
         return { ...item, ...lineItem, ...stationItem } as IMasterDataObject;
       }

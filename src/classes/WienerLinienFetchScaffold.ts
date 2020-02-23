@@ -1,5 +1,5 @@
 import { Eventing } from "./Eventing";
-import axios, { AxiosPromise, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 
 import {
   IStationObject,
