@@ -3,6 +3,7 @@ import { FetchFromJson } from "../../classes/FetchFromJson";
 import lineJson from "../../ogd-data/linien.json";
 import trackJson from "../../ogd-data/steig-daten-mock.json";
 import stopJson from "../../ogd-data/haltestellen.json";
+import { sanitizeNumber } from "../utils/helper";
 
 import {
   IStationObject,
@@ -40,27 +41,24 @@ router.post("/realtimedata", async (req: Request, res: Response) => {
     console.info("[INFO]Get Body Request");
     const splitRbl: [] = rbl.split(",");
     const rblParsed = splitRbl.map((i: any): number => {
-      if (!isNaN(i) && !(i.indexOf("e") > -1)) {
-        const parse = parseInt(i);
-        return parse;
-      } else {
-        res.status(400);
-        res.send("Something went wrong");
-        throw new Error("One Value is not a valid number");
-        res.end();
+      try {
+        return sanitizeNumber(i);
+      } catch (e) {
+        res.status(400).end();
+        throw new Error(e);
       }
     });
     try {
       console.info("[INFO]Fetch realtime data");
       await master.getRealTimeDataByRbl(rblParsed);
       res.status(200).json(master.realTimeData);
-    } catch (error) {
-      res.json(error);
-      res.end();
+    } catch (e) {
+      res.status(404).end();
     }
+  } else {
+    res.status(404).end();
+    throw new Error("No data found");
   }
-
-  res.send("ok");
 });
 
 export { router };
