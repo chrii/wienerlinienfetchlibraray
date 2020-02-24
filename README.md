@@ -26,6 +26,15 @@ Response: JSON
 
 Method: POST
 
+This request posts an object which key is 'rbl' and the value is a string with numbers
+
+Note: The string must have valid numbers which are separated with commas
+
+The RBL Numbers are maintained by Wiener Linien and their Open Government Data Team. It seems that there is no proper pattern behind them so be aware that there can be numbers with just two digits and numbers with five digits. Also it might be possible that some data have no RBL number at all (e.g. S-Bahn)
+
+Working example:
+`{rbl: "2404,5530"}`
+
 Response: JSON/WFS-GetFeature
 
 `http://localhost:3000/realtimedata`
