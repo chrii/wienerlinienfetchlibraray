@@ -14,14 +14,20 @@ There is for testing the nodemon module installed
 `npm start` to start it
 `localhost:3000` is standard
 
-Fetching all Stations and lines
+### Fetching all stations and lines
+
 Method: GET
+
 Response: JSON
+
 `http://localhost:3000/masterdata`
 
-Getting realtime data
+### Getting realtime data
+
 Method: POST
-Reponse: JSON/WFS-GetFeature
+
+Response: JSON/WFS-GetFeature
+
 `http://localhost:3000/realtimedata`
 
 ## This is work in progress
