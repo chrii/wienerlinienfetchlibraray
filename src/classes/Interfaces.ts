@@ -1,3 +1,7 @@
+export interface IRblContainer {
+  rbl: number[];
+}
+
 export interface IStationObject {
   HALTESTELLEN_ID: number;
   TYP: string;

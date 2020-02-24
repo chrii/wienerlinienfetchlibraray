@@ -3,7 +3,8 @@ import {
   IMasterDataObject,
   ITrackObject,
   ILineObject,
-  IStationObject
+  IStationObject,
+  IRblContainer
 } from "./Interfaces";
 
 export class FetchFromJson extends WienerLinienFetchScaffold {
