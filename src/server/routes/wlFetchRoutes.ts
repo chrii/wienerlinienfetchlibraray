@@ -30,6 +30,7 @@ router.get("/", (req: Request, res: Response) => {
 });
 
 router.get("/masterdata", (req: Request, res: Response) => {
+  console.log(`Masterdata was fetched by: ${req}`);
   res.json(master.masterData);
 });
 

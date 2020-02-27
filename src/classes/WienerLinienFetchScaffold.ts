@@ -18,6 +18,7 @@ export abstract class WienerLinienFetchScaffold {
   protected abstract haltestellen: IStationObject[] = [];
   protected abstract steige: ITrackObject[] = [];
   protected abstract linien: ILineObject[] = [];
+
   //This method must be executed in the constructor
   abstract createScaffold(): IMasterDataObject[];
 
