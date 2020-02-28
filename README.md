@@ -1,5 +1,7 @@
 ## This Library is for filtering the Open Government Data of the public transport in Vienna
 
+### Todo Trello board: https://trello.com/b/fpdUYH4Q/wienerlinienfetchdata
+
 ### What is done?
 
 From the source JSON which are splitted in 3 files, it is possible to retrieve one master object with every single bus/train/metro station
