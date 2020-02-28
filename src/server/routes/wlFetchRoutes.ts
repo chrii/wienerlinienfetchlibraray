@@ -1,7 +1,7 @@
 import { Router, Response, Request } from "express";
 import { FetchFromJson } from "../../classes/FetchFromJson";
 import lineJson from "../../ogd-data/linien.json";
-import trackJson from "../../ogd-data/steig-daten-mock.json";
+import trackJson from "../../ogd-data/steige.json";
 import stopJson from "../../ogd-data/haltestellen.json";
 import { sanitizeNumber } from "../utils/helper";
 
